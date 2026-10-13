@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import csv
 
-
 FONT = "Arial"
 
 COLORS = {
@@ -24,7 +23,6 @@ COLORS = {
     "orange": "#F59E0B",
     "red": "#EF4444"
 }
-
 
 plt.rcParams.update({
     "font.family": FONT,
@@ -69,13 +67,10 @@ def create_database():
 def get_category(bmi):
     if bmi < 18.5:
         return "Underweight"
-
     elif bmi < 25:
         return "Normal"
-
     elif bmi < 30:
         return "Overweight"
-
     else:
         return "Obese"
 
@@ -83,13 +78,10 @@ def get_category(bmi):
 def get_category_color(category):
     if category == "Underweight":
         return COLORS["blue"]
-
     elif category == "Normal":
         return COLORS["green"]
-
     elif category == "Overweight":
         return COLORS["orange"]
-
     else:
         return COLORS["red"]
 
@@ -270,7 +262,6 @@ def show_history():
                     WHERE name LIKE ?
                     ORDER BY id DESC
                 """, (f"%{search_name}%",))
-
             else:
                 cursor.execute("""
                     SELECT name, weight, height, bmi, category, date
@@ -308,6 +299,37 @@ def show_history():
                 f"Unable to read BMI records.\n\n{error}"
             )
 
+    def clear_history():
+        confirmed = messagebox.askyesno(
+            "Clear History",
+            "Are you sure you want to delete all saved BMI records?"
+        )
+
+        if not confirmed:
+            return
+
+        try:
+            connection = sqlite3.connect("bmi_data.db")
+            cursor = connection.cursor()
+
+            cursor.execute("DELETE FROM bmi_records")
+
+            connection.commit()
+            connection.close()
+
+            load_history()
+
+            messagebox.showinfo(
+                "History Cleared",
+                "All BMI history records have been deleted."
+            )
+
+        except sqlite3.Error as error:
+            messagebox.showerror(
+                "Database Error",
+                f"Unable to clear BMI history.\n\n{error}"
+            )
+
     search_button = tk.Button(
         search_frame,
         text="SEARCH",
@@ -323,6 +345,22 @@ def show_history():
         pady=7
     )
     search_button.pack(side=tk.LEFT)
+
+    clear_history_button = tk.Button(
+        search_frame,
+        text="CLEAR HISTORY",
+        command=clear_history,
+        font=(FONT, 10, "bold"),
+        bg=COLORS["red"],
+        fg=COLORS["white"],
+        activebackground=COLORS["orange"],
+        activeforeground=COLORS["white"],
+        relief="flat",
+        cursor="hand2",
+        padx=20,
+        pady=7
+    )
+    clear_history_button.pack(side=tk.LEFT)
 
     load_history()
 
@@ -551,6 +589,7 @@ def create_input(parent, label_text):
         bg=COLORS["card"],
         fg=COLORS["text"]
     )
+
     label.pack(
         anchor="w",
         pady=(0, 6)
@@ -609,17 +648,16 @@ window.configure(
 )
 window.resizable(False, False)
 
-
 header = tk.Frame(
     window,
     bg=COLORS["background"]
 )
+
 header.pack(
     fill="x",
     padx=40,
     pady=(30, 10)
 )
-
 
 title = tk.Label(
     header,
@@ -628,10 +666,10 @@ title = tk.Label(
     bg=COLORS["background"],
     fg=COLORS["white"]
 )
+
 title.pack(
     anchor="w"
 )
-
 
 subtitle = tk.Label(
     header,
@@ -640,16 +678,17 @@ subtitle = tk.Label(
     bg=COLORS["background"],
     fg=COLORS["muted"]
 )
+
 subtitle.pack(
     anchor="w",
     pady=(5, 0)
 )
 
-
 content = tk.Frame(
     window,
     bg=COLORS["background"]
 )
+
 content.pack(
     fill="both",
     expand=True,
@@ -657,20 +696,20 @@ content.pack(
     pady=20
 )
 
-
 left_card = tk.Frame(
     content,
     bg=COLORS["card"],
     width=320,
     height=470
 )
+
 left_card.pack(
     side="left",
     fill="y",
     padx=(0, 12)
 )
-left_card.pack_propagate(False)
 
+left_card.pack_propagate(False)
 
 input_title = tk.Label(
     left_card,
@@ -679,45 +718,45 @@ input_title = tk.Label(
     bg=COLORS["card"],
     fg=COLORS["purple_hover"]
 )
+
 input_title.pack(
     anchor="w",
     padx=25,
     pady=(25, 20)
 )
 
-
 name_frame, name_entry = create_input(
     left_card,
     "Full Name"
 )
+
 name_frame.pack(
     fill="x",
     padx=25,
     pady=(0, 15)
 )
 
-
 weight_frame, weight_entry = create_input(
     left_card,
     "Weight (kg)"
 )
+
 weight_frame.pack(
     fill="x",
     padx=25,
     pady=(0, 15)
 )
 
-
 height_frame, height_entry = create_input(
     left_card,
     "Height (m)"
 )
+
 height_frame.pack(
     fill="x",
     padx=25,
     pady=(0, 20)
 )
-
 
 calculate_button = tk.Button(
     left_card,
@@ -732,11 +771,11 @@ calculate_button = tk.Button(
     cursor="hand2",
     pady=12
 )
+
 calculate_button.pack(
     fill="x",
     padx=25
 )
-
 
 right_card = tk.Frame(
     content,
@@ -744,12 +783,13 @@ right_card = tk.Frame(
     width=320,
     height=470
 )
+
 right_card.pack(
     side="left",
     fill="y"
 )
-right_card.pack_propagate(False)
 
+right_card.pack_propagate(False)
 
 result_title = tk.Label(
     right_card,
@@ -758,12 +798,12 @@ result_title = tk.Label(
     bg=COLORS["card"],
     fg=COLORS["purple_hover"]
 )
+
 result_title.pack(
     anchor="w",
     padx=25,
     pady=(25, 10)
 )
-
 
 score_label = tk.Label(
     right_card,
@@ -772,10 +812,10 @@ score_label = tk.Label(
     bg=COLORS["card"],
     fg=COLORS["muted"]
 )
+
 score_label.pack(
     pady=(25, 0)
 )
-
 
 bmi_value_label = tk.Label(
     right_card,
@@ -784,8 +824,8 @@ bmi_value_label = tk.Label(
     bg=COLORS["card"],
     fg=COLORS["purple_hover"]
 )
-bmi_value_label.pack()
 
+bmi_value_label.pack()
 
 bmi_category_label = tk.Label(
     right_card,
@@ -794,20 +834,20 @@ bmi_category_label = tk.Label(
     bg=COLORS["card"],
     fg=COLORS["muted"]
 )
+
 bmi_category_label.pack(
     pady=(0, 30)
 )
-
 
 button_frame = tk.Frame(
     right_card,
     bg=COLORS["card"]
 )
+
 button_frame.pack(
     fill="x",
     padx=25
 )
-
 
 create_action_button(
     button_frame,
@@ -815,20 +855,17 @@ create_action_button(
     show_history
 )
 
-
 create_action_button(
     button_frame,
-    "VIEW BMI TREND",
+    "BMI GRAPH",
     show_graph
 )
-
 
 create_action_button(
     button_frame,
     "EXPORT CSV",
     export_to_csv
 )
-
 
 footer = tk.Label(
     window,
@@ -837,9 +874,9 @@ footer = tk.Label(
     bg=COLORS["background"],
     fg=COLORS["muted"]
 )
+
 footer.pack(
     pady=(0, 20)
 )
-
 
 window.mainloop()
