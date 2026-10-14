@@ -169,7 +169,7 @@ python -m pip install matplotlib
 4. Run the Python file:
 
 ```bash
-python bmi_calculator.py
+python bmi_cal.py
 ```
 
 
