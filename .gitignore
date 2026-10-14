@@ -3,9 +3,43 @@ __pycache__/
 *.py[cod]
 
 # Virtual environments
-.venv/
 venv/
+.venv/
+env/
+ENV/
 
-# Application data generated at runtime
+# IDE and editor files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+
+# BMI database
 bmi_data.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Exported CSV files
 bmi_export.csv
+*.csv
+
+# Test and coverage files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build and distribution files
+build/
+dist/
+*.egg-info/
